@@ -10,6 +10,16 @@ interface DataItem {
   string_list_data: StringListData[];
 }
 
+interface RelationshipsFollowing {
+  title: string;
+  media_list_data: any[];
+  string_list_data: StringListData[];
+}
+
+interface FollowingData {
+  relationships_following: RelationshipsFollowing[];
+}
+
 @Component({
   selector: 'app-followers',
   templateUrl: './followers.component.html',
@@ -51,7 +61,7 @@ export class FollowersComponent {
     if (input?.files?.length) {
       this.followingsFileName = input.files[0].name;
       this.readFile(input.files[0]).then((data) => {
-        this.followingsData = this.extractHrefAndValue(data);
+        this.followingsData = this.extractHrefAndValueFromFollowing(data);
         this.updateTables();
       });
     }
@@ -83,7 +93,7 @@ export class FollowersComponent {
     if (files?.length) {
       this.followingsFileName = files[0].name;
       this.readFile(files[0]).then((data) => {
-        this.followingsData = this.extractHrefAndValue(data);
+        this.followingsData = this.extractHrefAndValueFromFollowing(data);
         this.updateTables();
       });
     }
@@ -115,6 +125,21 @@ export class FollowersComponent {
   extractHrefAndValue(dataArray: DataItem[]): any[] {
     return dataArray
       .map(item => item.string_list_data.map(({ href, value }) => ({ url: href, value })))
+      .flat();
+  }
+
+  extractHrefAndValueFromFollowing(data: FollowingData): { url: string; value: string }[] {
+    if (!data.relationships_following || !Array.isArray(data.relationships_following)) {
+      throw new Error("El JSON no tiene la estructura esperada.");
+    }
+  
+    return data.relationships_following
+      .map(item =>
+        item.string_list_data.map(({ href, value }) => ({
+          url: href,
+          value: value,
+        }))
+      )
       .flat();
   }
 
