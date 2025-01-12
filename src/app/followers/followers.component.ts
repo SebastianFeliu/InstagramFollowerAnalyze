@@ -34,6 +34,7 @@ export class FollowersComponent {
   followingsFileName: string | null = null;
   commonFollowers: any[] = [];
   nonFollowers: any[] = [];
+  followersNotFollowing: any[] = [];
   followersData: any[] = [];
   followingsData: any[] = [];
 
@@ -45,15 +46,21 @@ export class FollowersComponent {
   nonFollowersPageSize: number = 100;
   nonFollowersCurrentPage: number = 1;
 
+    // Paginación para No te siguen
+  followersNotFollowingPageSize: number = 100;
+  followersNotFollowingCurrentPage: number = 1;
+
   pageSizeOptions: number[] = [10, 100, 1000];
 
   // Variables para los filtros de búsqueda
   searchCommonFollowers: string = '';
   searchNonFollowers: string = '';
+  searchFollowersNotFollowing: string = '';
 
   // Variables para los datos filtrados
   filteredCommonFollowers: any[] = [];
   filteredNonFollowers: any[] = [];
+  filteredFollowersNotFollowing: any[] = [];
 
   onFileChangeFollowers(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -129,9 +136,11 @@ export class FollowersComponent {
     if (this.followersData.length && this.followingsData.length) {
       this.commonFollowers = this.getCommonFollowers(this.followingsData, this.followersData);
       this.nonFollowers = this.getNonFollowers(this.followingsData, this.followersData);
+      this.followersNotFollowing = this.getFollowersNotFollowing(this.followersData, this.followingsData); // Nueva tabla
       this.filterData();
     }
   }
+  
 
   extractHrefAndValue(dataArray: DataItem[]): any[] {
     return dataArray
@@ -161,6 +170,12 @@ export class FollowersComponent {
     );
   }
 
+  getFollowersNotFollowing(followers: any[], following: any[]): any[] {
+    return followers.filter(({ url }) =>
+      !following.some(followed => followed.url === url)
+    );
+  }  
+
   getNonFollowers(following: any[], followers: any[]): any[] {
     return following.filter(({ url }) =>
       !followers.some(follower => follower.url === url)
@@ -170,7 +185,9 @@ export class FollowersComponent {
   filterData(): void {
     this.filteredCommonFollowers = this.filterFollowers(this.commonFollowers, this.searchCommonFollowers);
     this.filteredNonFollowers = this.filterFollowers(this.nonFollowers, this.searchNonFollowers);
+    this.filteredFollowersNotFollowing = this.filterFollowers(this.followersNotFollowing, this.searchFollowersNotFollowing);
   }
+  
 
   filterFollowers(data: any[], searchTerm: string): any[] {
     return data.filter(follower =>
@@ -197,6 +214,15 @@ export class FollowersComponent {
     }
   }
 
+  onFollowersNotFollowingPageSizeChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    if (selectElement) {
+      this.followersNotFollowingPageSize = Number(selectElement.value);
+      this.followersNotFollowingCurrentPage = 1;
+      this.updateTables();
+    }
+  }
+
   getPaginatedData(data: any[], pageSize: number, currentPage: number): any[] {
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
@@ -217,6 +243,10 @@ export class FollowersComponent {
 
   onNonFollowersPageChange(page: number): void {
     this.nonFollowersCurrentPage = page;
+  }
+
+  onFollowersNotFollowingPageChange(page: number): void {
+    this.followersNotFollowingCurrentPage = page;
   }
 
   formatTimestampToSantiagoDate(timestamp: number): string {
