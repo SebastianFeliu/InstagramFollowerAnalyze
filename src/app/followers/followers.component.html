@@ -49,10 +49,36 @@
     </div>
   </div>
 
+  <!-- Buscador para Seguidores en común y No te siguen -->
+  <div class="row mb-4">
+    <div class="col-12 col-md-6 mb-4">
+      <label for="searchCommonFollowers" class="form-label">Buscar Seguidores en común</label>
+      <input
+        id="searchCommonFollowers"
+        type="text"
+        [(ngModel)]="searchCommonFollowers"
+        (ngModelChange)="filterData()"
+        class="form-control"
+        placeholder="Buscar por URL o nombre"
+      />
+    </div>
+    <div class="col-12 col-md-6 mb-4">
+      <label for="searchNonFollowers" class="form-label">Buscar No te siguen</label>
+      <input
+        id="searchNonFollowers"
+        type="text"
+        [(ngModel)]="searchNonFollowers"
+        (ngModelChange)="filterData()"
+        class="form-control"
+        placeholder="Buscar por URL o nombre"
+      />
+    </div>
+  </div>
+
   <!-- Tablas con Bootstrap -->
   <div class="row">
     <div class="col-12 col-md-6">
-      <h5>Seguidores en común ({{ commonFollowers.length }})</h5>
+      <h5>Seguidores en común ({{ filteredCommonFollowers.length }})</h5>
       <div class="table-wrapper">
         <table class="table table-striped table-hover">
           <thead>
@@ -62,7 +88,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let follower of getPaginatedData(commonFollowers, commonFollowersPageSize, commonFollowersCurrentPage)">
+            <tr *ngFor="let follower of getPaginatedData(filteredCommonFollowers, commonFollowersPageSize, commonFollowersCurrentPage)">
               <td>{{ follower.value }}</td>
               <td><a [href]="follower.url" target="_blank">{{ follower.url }}</a></td>
             </tr>
@@ -82,10 +108,10 @@
             >
               Anterior
             </button>
-            <span class="mx-2">{{ commonFollowersCurrentPage }} de {{ totalPages(commonFollowers, commonFollowersPageSize) }}</span>
+            <span class="mx-2">{{ commonFollowersCurrentPage }} de {{ totalPages(filteredCommonFollowers, commonFollowersPageSize) }}</span>
             <button
               class="btn btn-link btn-sm"
-              [disabled]="commonFollowersCurrentPage === totalPages(commonFollowers, commonFollowersPageSize)"
+              [disabled]="commonFollowersCurrentPage === totalPages(filteredCommonFollowers, commonFollowersPageSize)"
               (click)="onCommonFollowersPageChange(commonFollowersCurrentPage + 1)"
             >
               Siguiente
@@ -103,7 +129,7 @@
     </div>
 
     <div class="col-12 col-md-6">
-      <h5>No te siguen ({{ nonFollowers.length }})</h5>
+      <h5>No te siguen ({{ filteredNonFollowers.length }})</h5>
       <div class="table-wrapper">
         <table class="table table-striped table-hover">
           <thead>
@@ -113,7 +139,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let nonFollower of getPaginatedData(nonFollowers, nonFollowersPageSize, nonFollowersCurrentPage)">
+            <tr *ngFor="let nonFollower of getPaginatedData(filteredNonFollowers, nonFollowersPageSize, nonFollowersCurrentPage)">
               <td>{{ nonFollower.value }}</td>
               <td><a [href]="nonFollower.url" target="_blank">{{ nonFollower.url }}</a></td>
             </tr>
@@ -133,10 +159,10 @@
             >
               Anterior
             </button>
-            <span class="mx-2">{{ nonFollowersCurrentPage }} de {{ totalPages(nonFollowers, nonFollowersPageSize) }}</span>
+            <span class="mx-2">{{ nonFollowersCurrentPage }} de {{ totalPages(filteredNonFollowers, nonFollowersPageSize) }}</span>
             <button
               class="btn btn-link btn-sm"
-              [disabled]="nonFollowersCurrentPage === totalPages(nonFollowers, nonFollowersPageSize)"
+              [disabled]="nonFollowersCurrentPage === totalPages(filteredNonFollowers, nonFollowersPageSize)"
               (click)="onNonFollowersPageChange(nonFollowersCurrentPage + 1)"
             >
               Siguiente

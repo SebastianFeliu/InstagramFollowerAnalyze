@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';  
 
 interface StringListData {
   href: string;
@@ -25,7 +26,7 @@ interface FollowingData {
   templateUrl: './followers.component.html',
   styleUrls: ['./followers.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, FormsModule]
 })
 export class FollowersComponent {
   followersFileName: string | null = null;
@@ -44,6 +45,14 @@ export class FollowersComponent {
   nonFollowersCurrentPage: number = 1;
 
   pageSizeOptions: number[] = [10, 100, 1000];
+
+  // Variables para los filtros de búsqueda
+  searchCommonFollowers: string = '';
+  searchNonFollowers: string = '';
+
+  // Variables para los datos filtrados
+  filteredCommonFollowers: any[] = [];
+  filteredNonFollowers: any[] = [];
 
   onFileChangeFollowers(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -119,6 +128,7 @@ export class FollowersComponent {
     if (this.followersData.length && this.followingsData.length) {
       this.commonFollowers = this.getCommonFollowers(this.followingsData, this.followersData);
       this.nonFollowers = this.getNonFollowers(this.followingsData, this.followersData);
+      this.filterData();
     }
   }
 
@@ -132,7 +142,7 @@ export class FollowersComponent {
     if (!data.relationships_following || !Array.isArray(data.relationships_following)) {
       throw new Error("El JSON no tiene la estructura esperada.");
     }
-  
+
     return data.relationships_following
       .map(item =>
         item.string_list_data.map(({ href, value }) => ({
@@ -152,6 +162,18 @@ export class FollowersComponent {
   getNonFollowers(following: any[], followers: any[]): any[] {
     return following.filter(({ url }) =>
       !followers.some(follower => follower.url === url)
+    );
+  }
+
+  filterData(): void {
+    this.filteredCommonFollowers = this.filterFollowers(this.commonFollowers, this.searchCommonFollowers);
+    this.filteredNonFollowers = this.filterFollowers(this.nonFollowers, this.searchNonFollowers);
+  }
+
+  filterFollowers(data: any[], searchTerm: string): any[] {
+    return data.filter(follower =>
+      follower.url.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      follower.value.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 
@@ -178,7 +200,7 @@ export class FollowersComponent {
     const endIndex = startIndex + pageSize;
     return data.slice(startIndex, endIndex);
   }
-  
+
   // Función para calcular el número total de páginas
   totalPages(data: any[], pageSize: number): number {
     if (data.length === 0 || pageSize === 0) {
