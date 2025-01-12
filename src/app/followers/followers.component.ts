@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 interface StringListData {
   href: string;
   value: string;
+  timestamp: number;
 }
 
 interface DataItem {
@@ -134,7 +135,7 @@ export class FollowersComponent {
 
   extractHrefAndValue(dataArray: DataItem[]): any[] {
     return dataArray
-      .map(item => item.string_list_data.map(({ href, value }) => ({ url: href, value })))
+      .map(item => item.string_list_data.map(({ href, value, timestamp }) => ({ url: href, value, date: this.formatTimestampToSantiagoDate(timestamp) })))
       .flat();
   }
 
@@ -145,9 +146,10 @@ export class FollowersComponent {
 
     return data.relationships_following
       .map(item =>
-        item.string_list_data.map(({ href, value }) => ({
+        item.string_list_data.map(({ href, value, timestamp }) => ({
           url: href,
           value: value,
+          date: this.formatTimestampToSantiagoDate(timestamp)
         }))
       )
       .flat();
@@ -216,5 +218,29 @@ export class FollowersComponent {
   onNonFollowersPageChange(page: number): void {
     this.nonFollowersCurrentPage = page;
   }
+
+  formatTimestampToSantiagoDate(timestamp: number): string {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: false,
+    };
+  
+    // Crear un objeto Date con el timestamp
+    const date = new Date(timestamp * 1000); // Convertir timestamp a milisegundos
+  
+    // Usar Intl.DateTimeFormat con la zona horaria de Santiago de Chile
+    const formatter = new Intl.DateTimeFormat('es-CL', {
+      ...options,
+      timeZone: 'America/Santiago',
+    });
+  
+    return formatter.format(date);
+  }
+  
 }
 

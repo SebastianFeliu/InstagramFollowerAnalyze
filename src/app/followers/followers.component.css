@@ -1,6 +1,6 @@
 /* Contenedor de la página */
 .container {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
 }
 
@@ -109,4 +109,8 @@
 
 .table-footer .pagination span {
   font-size: 0.9rem;
+}
+
+.date-column {
+  text-align: left;
 }
