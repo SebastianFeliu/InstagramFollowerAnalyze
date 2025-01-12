@@ -1,0 +1,112 @@
+/* Contenedor de la página */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Estilos generales para las tablas */
+.table-wrapper {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Estilo de las áreas de "Drag and Drop" */
+.drag-area {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+}
+
+.drag-area:hover {
+  border-color: #007bff;
+}
+
+.drag-area-box {
+  padding: 10px;
+  font-size: 14px;
+  color: #6c757d;
+  font-weight: 500;
+  border-radius: 5px;
+}
+
+/* Reducir el tamaño de las áreas de "Drag and Drop" */
+.drag-area h4 {
+  font-size: 1.2rem;
+}
+
+.drag-area-box {
+  font-size: 0.9rem;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .table-wrapper {
+    max-height: 250px;
+  }
+
+  .drag-area {
+    font-size: 0.9rem;
+    padding: 15px;
+  }
+
+  .table {
+    font-size: 0.9rem;
+  }
+
+  .pagination button {
+    padding: 5px 8px;
+  }
+
+  .pagination span {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 10px;
+  }
+
+  .table-wrapper {
+    max-height: 200px;
+  }
+
+  .drag-area {
+    font-size: 0.8rem;
+    padding: 10px;
+  }
+
+  .table {
+    font-size: 0.8rem;
+  }
+}
+
+/* Nueva disposición para la paginación y cantidad por página */
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.table-footer .pagination {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.table-footer .pagination select {
+  margin-left: 10px;
+  font-size: 0.9rem;
+}
+
+.table-footer .pagination button {
+  padding: 5px 10px;
+}
+
+.table-footer .pagination span {
+  font-size: 0.9rem;
+}

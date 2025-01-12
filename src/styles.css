@@ -1,0 +1,30 @@
+/* Asegura que el body ocupe toda la altura de la ventana */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+/* El contenedor principal debe ocupar toda la altura de la ventana */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f9fa; /* Fondo gris claro */
+  margin: 0; /* Asegúrate de no tener márgenes no deseados */
+}
+
+
+/* El contenido debe ocupar todo el espacio disponible */
+.content {
+  flex: 1;
+  padding-bottom: 50px; /* Ajusta según la altura de tu footer */
+}
+
+/* El footer debe estar al final de la página */
+app-footer {
+  /* Asegura que el footer tenga un tamaño adecuado */
+  background-color: #f8f9fa; /* Fondo gris claro */
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
